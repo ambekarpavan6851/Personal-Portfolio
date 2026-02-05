@@ -5,26 +5,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pavan R Ambekar | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle dark mode">🌙</button>
 
-    <header class="header">
-        <!-- Theme toggle button -->
-        <button id="theme-toggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle dark mode">🌙</button>
+    <header class="header container">
         <div class="header-content">
-            <center>
-                <img src="profile67.jpeg" alt="Pavan R Ambekar" height="300px" width="300px">
-            </center>
-            <div>
+            <div class="hero-text">
                 <h1>Pavan R Ambekar</h1>
                 <p>
-                    Engineering student with strong interest in Web Development,
-                    Computer Architecture, Embedded Systems, and Software Development.
+                    Engineering student passionate about building performant Web Applications,
+                    optimizing Computer Architecture, and diving deep into Embedded Systems.
                 </p>
 
-                <!-- In-page navigation placed below description -->
                 <nav class="main-nav" aria-label="Main">
                     <a href="#skills">Skills</a>
                     <a href="#projects">Projects</a>
@@ -32,58 +33,152 @@
                     <a href="#contact">Contact</a>
                 </nav>
             </div>
+
+            <div class="hero-image-container">
+                <img src="image_copy.png" alt="Pavan R Ambekar" width="300" height="300">
+            </div>
         </div>
     </header>
 
     <main class="container">
 
-        <section id="skills" class="card">
-            <h2>Skills</h2>
-            <ul>
-                <li>HTML, CSS, JavaScript</li>
-                <li>C++, Python, Basics of C</li>
-                <li>Linux, Git & GitHub</li>
-                <li>Computer Architecture & Embedded Systems</li>
+        <section id="skills">
+            <div class="section-header">
+                <h2>Skills</h2>
+            </div>
+
+            <ul class="skills-list">
+                <li class="skill-tag">HTML, CSS & JavaScript</li>
+                <li class="skill-tag">C++ & Python</li>
+                <li class="skill-tag">Linux</li>
+                <li class="skill-tag">Operating Systems</li>
+                <li class="skill-tag">Computer Architecture</li>
+                <li class="skill-tag">Embedded Systems</li>
             </ul>
         </section>
 
-        <section id="projects" class="card">
-            <h2>Projects</h2>
-            <ul>
-                <li><b>L1/L2 Cache Simulator</b> – C++</li>
-                <li><b>Bytecode Virtual Machine</b> – C++</li>
-                <li><b>FPGA Image Processing</b> – Verilog</li>
-                <li><b>Industrial Protection System</b> – STM32</li>
-            </ul>
-        </section>
+        <section id="projects">
+            <div class="section-header">
+                <h2>Projects</h2>
+            </div>
 
-        <section id="education" class="card">
-            <h2>Education</h2>
-            <p><b>B.E. Electronics & Instrumentation</b></p>
-            <p>Dayananda Sagar College of Engineering</p>
-            <p>CGPA: 8.53 (2022 – 2026)</p>
-            <br>
-            <p><b>PUC</b></p>
-            <p>ASC PU COLLEGE</p>
-            <p>Marks 90.5 (2020 – 2022)</p>
-        </section>
+            <div class="grid-list">
 
-        <section id="contact" class="card">
-            <h2>Contact</h2>
-            <p>Email: <a href="mailto:pavanambekar2004@gmail.com">pavanambekar2004@gmail.com</a></p>
-            <p>GitHub: <a href="https://github.com/pavan6851" target="_blank">github.com/pavan6851</a></p>
-            <p>LinkedIn: <a href="https://linkedin.com/in/pavan-r-ambekar"
-                    target="_blank">linkedin.com/in/pavan-r-ambekar</a></p>
-        </section>
+                <article class="card project-card">
+                    <span class="project-tag">C++</span>
+                    <h3>Bytecode Virtual Machine</h3>
+                    <p>
+                        • Built a complete C++ stack-based VM with lexer, parser, and AST components following x86 ISA
+                        for bytecode
+                        compilation and execution.<br>
+                        • Implemented robust control-flow support with conditional statements, loops, and jump
+                        instructions enabling
+                        complex program execution patterns.<br>
+                        • Enhanced instruction dispatch and validated via REPL testing, achieving 20% performance
+                        improvement.
+                    </p>
+                </article>
+
+                <article class="card project-card">
+                    <span class="project-tag">C++</span>
+                    <h3>L1/L2 Cache Simulator</h3>
+                    <p>
+                        • Analyzed a two-level CPU cache simulator in C++ using STL, with customizable parameters such
+                        as size,
+                        associativity, and block size.<br>
+                        • Integrated set-associative caching with FIFO replacement policy and hex trace file parsing for
+                        workload
+                        accuracy.<br>
+                        • Evaluated performance evaluation by calculating AMAT and generated comprehensive hit/miss
+                        statistics for
+                        analysis.
+                    </p>
+                </article>
+
+                <article class="card project-card">
+                    <span class="project-tag">Verilog</span>
+                    <h3>Real-Time Image Processing on FPGA</h3>
+                    <p>
+                        • Developed multiple image processing modules in Verilog including grayscale conversion, median
+                        filtering,
+                        and Sobel edge detection algorithms.<br>
+                        • Executed and tested hardware implementation on Spartan-3 FPGA platform for real-world image
+                        processing
+                        applications.<br>
+                        • Optimized performance in Xilinx ISE using hardware parallelism for real-time execution
+                        capabilities.
+                    </p>
+                </article>
+
+                <article class="card project-card">
+                    <span class="project-tag">STM32</span>
+                    <h3>Industrial Protection System</h3>
+                    <p>
+                        • Engineered an STM32-based industrial protection system integrating temperature, ultrasonic,
+                        and light
+                        sensors for continuous environmental monitoring.<br>
+                        • Designed embedded C firmware in Keil MDK with ADC signal processing, multi-sensor data fusion,
+                        and
+                        real-time anomaly detection algorithms.<br>
+                        • Established automated safety responses and alert systems for reliable hazard detection and
+                        workplace
+                        protection.
+                    </p>
+                </article>
+
+            </div>
+
+
+            <section id="education">
+                <div class="section-header">
+                    <h2>Education</h2>
+                </div>
+
+                <div class="card">
+                    <div class="edu-block">
+                        <div class="edu-title">B.E. Electronics & Instrumentation</div>
+                        <div class="edu-meta">Dayananda Sagar College of Engineering • 2022 – 2026</div>
+                        <p>CGPA: 8.53</p>
+                    </div>
+
+                    <div class="edu-block" style="border: none; padding-bottom: 0; margin-bottom: 0;">
+                        <div class="edu-title">Pre-University Course (PUC)</div>
+                        <div class="edu-meta">ASC PU COLLEGE • 2020 – 2022</div>
+                        <p>Score: 90.5%</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact">
+                <div class="section-header">
+                    <h2>Contact</h2>
+                </div>
+
+                <div class="grid-list" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <a href="mailto:pavanambekar2004@gmail.com" class="contact-item">
+                        <span>📧</span>
+                        <span>pavanambekar2004@gmail.com</span>
+                    </a>
+
+                    <a href="https://github.com/pavan6851" target="_blank" class="contact-item">
+                        <span>🐙</span>
+                        <span>github.com/pavan6851</span>
+                    </a>
+
+                    <a href="https://linkedin.com/in/pavan-r-ambekar" target="_blank" class="contact-item">
+                        <span>💼</span>
+                        <span>linkedin.com/in/pavan-r-ambekar</span>
+                    </a>
+                </div>
+            </section>
 
     </main>
 
     <footer class="footer">
-        <p>© 2026 Pavan R Ambekar</p>
+        <p>© 2026 Pavan R Ambekar.</p>
     </footer>
 
     <script src="theme.js" defer></script>
 </body>
 
 </html>
-
