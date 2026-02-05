@@ -1,114 +1,142 @@
-// theme.js — Dark/Light theme toggle + in-page section observer
-// Features:
-// - Respects OS prefers-color-scheme when no stored preference
-// - Persists user choice to localStorage
-// - Accessible toggle button updates aria-pressed and tooltip
-// - Highlights nav links for visible sections using IntersectionObserver
+// theme.js
 
+// Constants
 const THEME_KEY = 'theme-preference';
 const TOGGLE_ID = 'theme-toggle';
-const NAV_SELECTOR = '.main-nav';
+const SECTIONS_SELECTOR = 'section';
+const NAV_LINKS_SELECTOR = '.main-nav a';
+
+// --- Theme Management ---
 
 function getStoredTheme() {
-  try {
     return localStorage.getItem(THEME_KEY);
-  } catch (e) {
-    return null;
-  }
 }
 
 function storeTheme(theme) {
-  try {
     localStorage.setItem(THEME_KEY, theme);
-  } catch (e) {
-    // ignore
-  }
 }
 
-function systemPrefersDark() {
-  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+function getSystemTheme() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
 function applyTheme(theme) {
-  if (!theme) return;
-  document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
 
-  const btn = document.getElementById(TOGGLE_ID);
-  if (btn) {
-    const isDark = theme === 'dark';
-    btn.setAttribute('aria-pressed', String(isDark));
-    btn.textContent = isDark ? '☀️' : '🌙';
-    btn.title = isDark ? 'Switch to light mode' : 'Switch to dark mode';
-  }
+    const btn = document.getElementById(TOGGLE_ID);
+    if (btn) {
+        const isDark = theme === 'dark';
+        btn.textContent = isDark ? '☀️' : '🌙';
+        btn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+        btn.setAttribute('aria-pressed', isDark);
+    }
 }
 
-function initThemeToggle() {
-  const stored = getStoredTheme();
-  const initial = stored ? stored : (systemPrefersDark() ? 'dark' : 'light');
-  applyTheme(initial);
-
-  // Listen for OS theme changes only if the user hasn't set a preference
-  if (!stored && window.matchMedia) {
-    const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    // Use addEventListener where supported
-    if (typeof mq.addEventListener === 'function') {
-      mq.addEventListener('change', e => {
-        if (!getStoredTheme()) applyTheme(e.matches ? 'dark' : 'light');
-      });
-    } else if (typeof mq.addListener === 'function') {
-      mq.addListener(e => { if (!getStoredTheme()) applyTheme(e.matches ? 'dark' : 'light'); });
-    }
-  }
-
-  const btn = document.getElementById(TOGGLE_ID);
-  if (!btn) return;
-  btn.addEventListener('click', () => {
+function toggleTheme() {
     const current = document.documentElement.getAttribute('data-theme');
     const next = current === 'dark' ? 'light' : 'dark';
     applyTheme(next);
     storeTheme(next);
-  });
 }
 
-function initSectionObserver() {
-  const nav = document.querySelector(NAV_SELECTOR);
-  if (!nav) return;
+function initTheme() {
+    const stored = getStoredTheme();
+    const system = getSystemTheme();
 
-  const links = Array.from(nav.querySelectorAll('a'));
-  if (!links.length) return;
+    // Apply initial theme: stored > system > light
+    applyTheme(stored || system);
 
-  const sections = links
-    .map(l => document.getElementById(l.getAttribute('href').slice(1)))
-    .filter(Boolean);
+    // Watch for system changes if no preference is stored
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!getStoredTheme()) {
+            applyTheme(e.matches ? 'dark' : 'light');
+        }
+    });
 
-  const setActive = id => {
-    links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
-  };
-
-  // Highlight on click too (immediate feedback)
-  links.forEach(l => {
-    l.addEventListener('click', () => setActive(l.getAttribute('href').slice(1)));
-  });
-
-  const observer = new IntersectionObserver((entries) => {
-    const visible = entries
-      .filter(e => e.isIntersecting)
-      .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-    if (visible.length) setActive(visible[0].target.id);
-  }, { threshold: [0.35, 0.5, 0.75] });
-
-  sections.forEach(s => observer.observe(s));
-
-  if (location.hash) setActive(location.hash.slice(1));
+    // Toggle button listener
+    const btn = document.getElementById(TOGGLE_ID);
+    if (btn) {
+        btn.addEventListener('click', toggleTheme);
+    }
 }
 
-function initAll() {
-  initThemeToggle();
-  initSectionObserver();
+// --- Scroll Animations & Navigation ---
+
+function initScrollObserver() {
+    const sections = document.querySelectorAll(SECTIONS_SELECTOR);
+    const navLinks = document.querySelectorAll(NAV_LINKS_SELECTOR);
+
+    // 1. Section Reveal Animation
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                // Optional: Stop observing once revealed
+                // observer.unobserve(entry.target); 
+            }
+        });
+    }, {
+        threshold: 0.15, // Trigger when 15% of section is visible
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    sections.forEach(section => {
+        revealObserver.observe(section);
+    });
+
+    // 2. Active Link Highlighting
+    const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Remove active from all
+                navLinks.forEach(link => link.classList.remove('active'));
+
+                // Add active to current
+                const id = entry.target.getAttribute('id');
+                const activeLink = document.querySelector(`.main-nav a[href="#${id}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+            }
+        });
+    }, {
+        threshold: 0.5 // Trigger when 50% of the section is visible
+    });
+
+    sections.forEach(section => {
+        navObserver.observe(section);
+    });
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initAll);
-} else {
-  initAll();
+// --- Smooth Scroll Fix (Optional for older browsers, adds nice offset) ---
+function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+
+            const target = document.querySelector(targetId);
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                // Update URL without jump
+                history.pushState(null, null, targetId);
+            }
+        });
+    });
 }
+
+// --- Initialization ---
+
+document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    initScrollObserver();
+    initSmoothScroll();
+
+    // Force header visible immediately
+    const header = document.querySelector('.header');
+    if (header) header.style.opacity = '1';
+});
