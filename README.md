@@ -1,4 +1,3 @@
-🚀 Pavan R Ambekar — Portfolio Website
 A modern, responsive personal portfolio showcasing my background in Computer Architecture, Embedded Systems, and Systems Programming, along with hands-on projects in C++, FPGA, and STM32.
 
 🌐 Live Preview
